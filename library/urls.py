@@ -14,4 +14,6 @@ urlpatterns = [
     path('book/<int:pk>/borrow/', views.BorrowBookView.as_view(), name='borrow_book'),
     path('borrowed-book/', views.BorrowedBookView.as_view(), name='borrowed_book'),
     path('return-book/<int:pk>/', views.ReturnBookView.as_view(), name='return_book'),
+    path('home/', views.Home.as_view(), name='home'),
+    path('contact/', views.ContactUS, name='contact_us'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

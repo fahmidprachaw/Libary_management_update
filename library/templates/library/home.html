@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+{% comment %} Banner --- {% endcomment %}
+<div>
+    {% comment %} <img src="{% static 'books.jpg' %}" alt=""> {% endcomment %}
+    <img class="img-fluid my-4" src="{% static "books.jpg" %}" alt="" >
+    
+</div>
+
+<h1 class="text-center mt-4 mb-5">Populer Books</h1>
+<div class="mx-4 row gap-3">
+    {% for book in books %}
+        <div class="card col-md-4" style="width: 18rem;">
+            <img src="{{book.image.url}}" class="card-img-top" alt="...">
+            <div class="card-body">
+            <h5 class="card-title">{{book.title}}</h5>
+            <p class="card-text">{{book.description|truncatewords:10}}.</p>
+            <p class="card-text">Price: ${{book.price}}.</p>
+            <a href="{% url "book_detail" pk=book.pk %}" class="btn btn-primary">Details</a>
+            </div>
+        </div>
+    {% endfor %}
+    <a href="{% url "all_books" %}" class="btn btn-primary w-25 mx-auto">See More..</a>
+</div>
+{% endblock  %}
+
+{% comment %} <p>{{book.description|truncatewords:10}}</p> {% endcomment %}

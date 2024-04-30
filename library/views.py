@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib import messages
-from .models import Book, BorrowedBook, UserProfile
+from .models import Book, BorrowedBook, UserProfile, Category
 from .forms import ReviewForm, DepositeForm
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -69,6 +69,17 @@ class BookListView(ListView):
     template_name = 'library/all_books.html'
     context_object_name = 'books'
 
+    def get_queryset(self):
+        queryset =  super().get_queryset()
+        category = self.request.GET.get('category')
+        if category:
+            queryset = queryset.filter(category__name=category)
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
 
 
 class BookDetailsView(LoginRequiredMixin, DetailView):
@@ -175,4 +186,17 @@ class ReturnBookView(LoginRequiredMixin, View):
         borrowed_book.delete()
         messages.success(request, f'You have successfully returned the book.')
         return redirect('borrowed_book')
+
+class Home(ListView):
+    model = Book
+    template_name = 'library/home.html'
+    context_object_name = 'books'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Book.objects.all()[:4]
+    
+
+def ContactUS(request):
+    return render(request, 'library/contact_us.html')
 
